@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_loader">
+
+    <fragment
+        android:id="@+id/navigation_loader"
+        android:name="com.pivnoydevelopment.mdeditor.loader.ui.LoaderFragment"
+        android:label="@string/title_loader"
+        tools:layout="@layout/fragment_loader" >
+        <action
+            android:id="@+id/action_navigation_loader_to_navigation_viewer"
+            app:destination="@id/navigation_viewer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_viewer"
+        android:name="com.pivnoydevelopment.mdeditor.viewer.ui.ViewerFragment"
+        android:label="@string/title_viewer"
+        tools:layout="@layout/fragment_viewer" >
+        <action
+            android:id="@+id/action_navigation_viewer_to_navigation_editor"
+            app:destination="@id/navigation_editor" />
+        <action
+            android:id="@+id/action_navigation_viewer_to_navigation_loader"
+            app:destination="@id/navigation_loader" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_editor"
+        android:name="com.pivnoydevelopment.mdeditor.editor.ui.EditorFragment"
+        android:label="@string/title_editor"
+        tools:layout="@layout/fragment_editor" >
+        <action
+            android:id="@+id/action_navigation_editor_to_navigation_viewer"
+            app:destination="@id/navigation_viewer" />
+    </fragment>
+</navigation>
