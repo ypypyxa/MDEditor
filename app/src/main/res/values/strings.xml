@@ -3,4 +3,9 @@
     <string name="title_loader">Loader</string>
     <string name="title_viewer">Viewer</string>
     <string name="title_editor">Editor</string>
+    <string name="permission_denied">Разрешение отклонено</string>
+    <string name="permission_denied_message">Вы можете предоставить доступ к фотографиям в настройках приложения.</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="cancel">Отмена</string>
+    <string name="open_file">Открыть файл</string>
 </resources>

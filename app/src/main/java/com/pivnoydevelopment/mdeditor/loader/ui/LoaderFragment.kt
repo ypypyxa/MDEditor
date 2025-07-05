@@ -1,22 +1,32 @@
 package com.pivnoydevelopment.mdeditor.loader.ui
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.pivnoydevelopment.mdeditor.R
 import com.pivnoydevelopment.mdeditor.databinding.FragmentLoaderBinding
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class LoaderFragment : Fragment() {
 
     private var _binding: FragmentLoaderBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private lateinit var documentPicker: ActivityResultLauncher<Array<String>>
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,21 +40,72 @@ class LoaderFragment : Fragment() {
         _binding = FragmentLoaderBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textLoaderScreen
-        loaderViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-
+        initComponents(loaderViewModel)
         setupListeners()
-
 
         return root
     }
 
+    private fun initComponents(loaderViewModel: LoaderViewModel) {
+        documentPicker =
+            registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+                if (uri != null) {
+                    loaderViewModel.saveTempMarkdown(readTextFromUri(uri))
+                    findNavController().navigate(R.id.action_navigation_loader_to_navigation_viewer)
+                }
+            }
+
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                documentPicker.launch(arrayOf("text/markdown", "text/plain"))
+            } else {
+                showPermissionDeniedDialog()
+            }
+        }
+    }
+
     private fun setupListeners() {
         binding.buttonView.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_loader_to_navigation_viewer)
+            requestPermission()
         }
+    }
+
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            documentPicker.launch(arrayOf("text/markdown", "text/plain"))
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
+    private fun showPermissionDeniedDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(requireContext().getString(R.string.permission_denied))
+            .setMessage(requireContext().getString(R.string.permission_denied_message))
+            .setPositiveButton(requireContext().getString(R.string.open_settings)) { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton(requireContext().getString(R.string.cancel), null)
+            .show()
+    }
+
+    private fun readTextFromUri(uri: Uri): String {
+        val stringBuilder = StringBuilder()
+        requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line = reader.readLine()
+                while (line != null) {
+                    stringBuilder.appendLine(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
     }
 
     override fun onDestroyView() {
