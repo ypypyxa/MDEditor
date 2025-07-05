@@ -4,40 +4,50 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.pivnoydevelopment.mdeditor.R
 import com.pivnoydevelopment.mdeditor.databinding.FragmentViewerBinding
+import com.pivnoydevelopment.mdeditor.viewer.utils.MarkdownParser
 
 class ViewerFragment : Fragment() {
 
     private var _binding: FragmentViewerBinding? = null
+    private var viewerViewModel: ViewerViewModel? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private lateinit var parser: MarkdownParser
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewerViewModel =
-            ViewModelProvider(this)[ViewerViewModel::class.java]
+        viewerViewModel = ViewModelProvider(this)[ViewerViewModel::class.java]
 
         _binding = FragmentViewerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textViewerScreen
-        viewerViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-
+        initComponents()
         setupListeners()
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewerViewModel?.markdown?.observe(viewLifecycleOwner) {
+            val markdown = it
+            val views = parser.parse(markdown)
+            views.forEach { binding.markdownContainer.addView(it) }
+        }
+    }
+
+    private fun initComponents() {
+        parser = MarkdownParser(requireContext())
     }
 
     private fun setupListeners() {

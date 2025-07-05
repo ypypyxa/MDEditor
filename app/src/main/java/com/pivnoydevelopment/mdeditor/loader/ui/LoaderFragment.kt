@@ -23,6 +23,7 @@ import java.io.InputStreamReader
 class LoaderFragment : Fragment() {
 
     private var _binding: FragmentLoaderBinding? = null
+    private var loaderViewModel: LoaderViewModel? = null
 
     private lateinit var documentPicker: ActivityResultLauncher<Array<String>>
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
@@ -34,23 +35,22 @@ class LoaderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val loaderViewModel =
-            ViewModelProvider(this)[LoaderViewModel::class.java]
+        loaderViewModel = ViewModelProvider(this)[LoaderViewModel::class.java]
 
         _binding = FragmentLoaderBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        initComponents(loaderViewModel)
+        initComponents()
         setupListeners()
 
         return root
     }
 
-    private fun initComponents(loaderViewModel: LoaderViewModel) {
+    private fun initComponents() {
         documentPicker =
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
                 if (uri != null) {
-                    loaderViewModel.saveTempMarkdown(readTextFromUri(uri))
+                    loaderViewModel?.saveTempMarkdown(readTextFromUri(uri))
                     findNavController().navigate(R.id.action_navigation_loader_to_navigation_viewer)
                 }
             }
