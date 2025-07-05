@@ -9,4 +9,8 @@
     <string name="cancel">Отмена</string>
     <string name="open_file">Открыть файл</string>
     <string name="edit">Редактировать</string>
+    <string name="internet_error">Нет интернета</string>
+    <string name="loading_error">Ошибка загрузки:</string>
+    <string name="load_file">Загрузить файл</string>
+    <string name="enter_url">Введите ссылку на файл</string>
 </resources>

@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.pivnoydevelopment.mdeditor.R
+import com.pivnoydevelopment.mdeditor.common.domain.model.LoadResult
 import com.pivnoydevelopment.mdeditor.databinding.FragmentLoaderBinding
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -67,8 +69,26 @@ class LoaderFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.buttonView.setOnClickListener {
+        binding.buttonOpenFile.setOnClickListener {
             requestPermission()
+        }
+        binding.buttonLoadFile.setOnClickListener {
+            loaderViewModel?.downloadMarkdown("https://raw.githubusercontent.com/ypypyxa/OnlineSchool/refs/heads/main/README.md") { result ->
+                when (result) {
+                    is LoadResult.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    is LoadResult.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        loaderViewModel?.saveTempMarkdown(result.content)
+                        findNavController().navigate(R.id.action_navigation_loader_to_navigation_viewer)
+                    }
+                    is LoadResult.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        showToast(result.message)
+                    }
+                }
+            }
         }
     }
 
@@ -106,6 +126,10 @@ class LoaderFragment : Fragment() {
             }
         }
         return stringBuilder.toString()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
