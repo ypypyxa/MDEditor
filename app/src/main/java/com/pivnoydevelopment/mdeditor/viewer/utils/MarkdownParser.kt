@@ -14,6 +14,8 @@ import android.text.style.StyleSpan
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -172,7 +174,7 @@ class MarkdownParser(private val context: Context) {
         return imageView
     }
 
-    private fun createTable(rows: List<List<String>>): TableLayout {
+    private fun createTable(rows: List<List<String>>): HorizontalScrollView {
         val tableLayout = TableLayout(context)
         tableLayout.setPadding(1, 8, 1, 8)
 
@@ -181,20 +183,56 @@ class MarkdownParser(private val context: Context) {
             setStroke(2, Color.GRAY)
         }
 
+        val imageRegex = "^!\\[(.*?)]\\((.*?)\\)$".toRegex()
+
         rows.forEach { row ->
             val tableRow = TableRow(context)
             row.forEach { cell ->
-                val textView = TextView(context).apply {
-                    text = cell
-                    setTextColor(getColorFromAttr(R.attr.colorPrimary))
-                    setPadding(8, 8, 8, 8)
-                    textSize = 14f
-                    background = border
+                val trimmedCell = cell.trim()
+                val cellView: View = when {
+                    imageRegex.matches(trimmedCell) -> {
+                        val match = imageRegex.find(trimmedCell)!!
+                        val description = match.groupValues[1]
+                        val url = match.groupValues[2]
+                        createImageView(url, description)
+                    }
+                    trimmedCell.isNotEmpty() -> {
+                        createFormattedTextView(trimmedCell).apply {
+                            background = border
+                            setPadding(8, 8, 8, 8)
+                            textSize = 14f
+                        }
+                    }
+                    else -> {
+                        TextView(context).apply {
+                            text = ""
+                            background = border
+                            setPadding(8, 8, 8, 8)
+                        }
+                    }
                 }
-                tableRow.addView(textView)
+
+                val container: View = if (cellView is ImageView) {
+                    FrameLayout(context).apply {
+                        setPadding(8, 8, 8, 8)
+                        background = border
+                        addView(cellView)
+                    }
+                } else {
+                    cellView
+                }
+
+                tableRow.addView(container)
             }
             tableLayout.addView(tableRow)
         }
-        return tableLayout
+
+        val scrollView = HorizontalScrollView(context).apply {
+            addView(tableLayout)
+            isHorizontalScrollBarEnabled = true
+            isVerticalScrollBarEnabled = false
+            isScrollbarFadingEnabled = false
+        }
+        return scrollView
     }
 }
