@@ -1,13 +1,20 @@
 package com.pivnoydevelopment.mdeditor.loader.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.pivnoydevelopment.mdeditor.common.domain.model.LoadResult
+import com.pivnoydevelopment.mdeditor.common.utils.MarkdownLoaderManager
+import com.pivnoydevelopment.mdeditor.common.utils.TempStorageManager
 
 class LoaderViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Loader Fragment"
+    private val tempStorage = TempStorageManager.getInteractor()
+    private val downloader = MarkdownLoaderManager.getInteractor()
+
+    fun saveTempMarkdown(markdown: String) {
+        tempStorage.saveMarkdown(markdown)
     }
-    val text: LiveData<String> = _text
+
+    fun downloadMarkdown(urlString: String, onResult: (LoadResult) -> Unit) {
+        downloader.loadMarkdown(urlString, onResult)
+    }
 }

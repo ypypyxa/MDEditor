@@ -6,26 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".loader.ui.LoaderFragment">
 
-    <TextView
-        android:id="@+id/text_loader_screen"
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/urlInputLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/button_view"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:hintEnabled="true"
+        android:hint="@string/enter_url"
+        app:hintTextColor="@color/light_gray"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/urlEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button_view"
-        android:layout_width="match_parent"
+        android:id="@+id/button_open_file"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Далее"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/open_file"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:backgroundTint="@color/vk_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_load_file"
+        app:layout_constraintTop_toBottomOf="@id/urlInputLayout"/>
+
+    <Button
+        android:id="@+id/button_load_file"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/load_file"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/vk_blue"
+        app:layout_constraintStart_toEndOf="@id/button_open_file"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/urlInputLayout"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_open_file"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:indeterminateTint="?attr/colorPrimary"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

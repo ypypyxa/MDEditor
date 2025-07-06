@@ -3,4 +3,25 @@
     <string name="title_loader">Loader</string>
     <string name="title_viewer">Viewer</string>
     <string name="title_editor">Editor</string>
+    <string name="permission_denied">Разрешение отклонено</string>
+    <string name="permission_denied_message">Вы можете предоставить доступ к фотографиям в настройках приложения.</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="cancel">Отмена</string>
+    <string name="open_file">Открыть файл</string>
+    <string name="edit">Редактировать</string>
+    <string name="internet_error">Нет интернета</string>
+    <string name="loading_error">Ошибка загрузки:</string>
+    <string name="load_file">Загрузить файл</string>
+    <string name="enter_url">Введите ссылку на файл</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="add_header">Добавить заголовок</string>
+    <string name="bold">Жирный</string>
+    <string name="italic">Курсив</string>
+    <string name="strikeout">Зачеркнутый</string>
+    <string name="add_image">Добавить изображение</string>
+    <string name="add_table">Добавить таблицу</string>
+    <string name="cancel_edit">Закрыть редактор?</string>
+    <string name="unsaved_changes_will_be_lost">Несохраненные изменения будут удалены</string>
+    <string name="yes">Да</string>
+    <string name="default_url">https://raw.githubusercontent.com/ypypyxa/MDEditor/refs/heads/master/README.md</string>
 </resources>
