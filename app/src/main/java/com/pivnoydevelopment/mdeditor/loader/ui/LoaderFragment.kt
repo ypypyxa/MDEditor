@@ -72,8 +72,18 @@ class LoaderFragment : Fragment() {
         binding.buttonOpenFile.setOnClickListener {
             requestPermission()
         }
+        binding.urlEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.urlEditText.hint = requireContext().getString(R.string.default_url)
+            } else {
+                binding.urlEditText.hint = ""
+            }
+        }
         binding.buttonLoadFile.setOnClickListener {
-            loaderViewModel?.downloadMarkdown("https://raw.githubusercontent.com/ypypyxa/MDEditor/refs/heads/dev/README.md") { result ->
+            var urlString = binding.urlEditText.text.toString()
+            if (urlString.isEmpty()) urlString = requireContext().getString(R.string.default_url)
+
+            loaderViewModel?.downloadMarkdown(urlString) { result ->
                 when (result) {
                     is LoadResult.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE

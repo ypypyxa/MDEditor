@@ -14,7 +14,7 @@ class LoaderViewModel : ViewModel() {
         tempStorage.saveMarkdown(markdown)
     }
 
-    fun downloadMarkdown(url: String, onResult: (LoadResult) -> Unit) {
-        downloader.loadMarkdown(url, onResult)
+    fun downloadMarkdown(urlString: String, onResult: (LoadResult) -> Unit) {
+        downloader.loadMarkdown(urlString, onResult)
     }
 }
