@@ -20,4 +20,7 @@
     <string name="strikeout">Зачеркнутый</string>
     <string name="add_image">Добавить изображение</string>
     <string name="add_table">Добавить таблицу</string>
+    <string name="cancel_edit">Закрыть редактор?</string>
+    <string name="unsaved_changes_will_be_lost">Несохраненные изменения будут удалены</string>
+    <string name="yes">Да</string>
 </resources>
