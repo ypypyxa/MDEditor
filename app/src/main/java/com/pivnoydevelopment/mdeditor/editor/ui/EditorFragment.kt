@@ -64,7 +64,7 @@ class EditorFragment : Fragment() {
             wrapSelection("**", "**")
         }
         binding.buttonItalic.setOnClickListener {
-            wrapSelection("_", "_")
+            wrapSelection("*", "*")
         }
         binding.buttonStrikeout.setOnClickListener {
             wrapSelection("~~", "~~")
