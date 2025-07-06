@@ -73,7 +73,7 @@ class LoaderFragment : Fragment() {
             requestPermission()
         }
         binding.buttonLoadFile.setOnClickListener {
-            loaderViewModel?.downloadMarkdown("https://raw.githubusercontent.com/ypypyxa/OnlineSchool/refs/heads/main/README.md") { result ->
+            loaderViewModel?.downloadMarkdown("https://raw.githubusercontent.com/ypypyxa/MDEditor/refs/heads/dev/README.md") { result ->
                 when (result) {
                     is LoadResult.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE

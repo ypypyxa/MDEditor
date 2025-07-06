@@ -7,7 +7,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
-import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
@@ -102,26 +102,53 @@ class MarkdownParser(private val context: Context) {
     }
 
     private fun createFormattedTextView(text: String): TextView {
-        val spannable = SpannableString(text)
+        val spannable = SpannableStringBuilder(text)
 
-        // Жирный
-        "\\*\\*(.*?)\\*\\*".toRegex().findAll(text).forEach {
-            spannable.setSpan(StyleSpan(Typeface.BOLD), it.range.first, it.range.last + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        // Курсив
-        "\\*(.*?)\\*".toRegex().findAll(text).forEach {
-            spannable.setSpan(StyleSpan(Typeface.ITALIC), it.range.first, it.range.last + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        // Зачёркнутый
-        "~~(.*?)~~".toRegex().findAll(text).forEach {
-            spannable.setSpan(StrikethroughSpan(), it.range.first, it.range.last + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val regex = Regex(
+            pattern = """
+                (~~\*\*\*(.*?)\*\*\*~~) # перечёркнутый жирный курсив
+                | (~~\*\*(.*?)\*\*~~) # перечёркнутый жирный
+                | (~~\*(.*?)\*~~) # перечёркнутый курсив
+                | (\*\*\*(.*?)\*\*\*) # жирный курсив
+                | (\*\*(.*?)\*\*) # жирный
+                | (\*(.*?)\*) # курсив
+                | (~~(.*?)~~) # перечёркнутый
+                """.trimIndent(),
+            option = RegexOption.COMMENTS
+        )
+
+        val matches = regex.findAll(spannable).toList()
+
+        for (match in matches.asReversed()) {
+            val start = match.range.first
+            val end = match.range.last + 1
+
+            val (content, spans) = when {
+                match.groupValues[2].isNotEmpty() -> match.groupValues[2] to listOf(StrikethroughSpan(), StyleSpan(Typeface.BOLD), StyleSpan(Typeface.ITALIC))
+                match.groupValues[4].isNotEmpty() -> match.groupValues[4] to listOf(StrikethroughSpan(), StyleSpan(Typeface.BOLD))
+                match.groupValues[6].isNotEmpty() -> match.groupValues[6] to listOf(StrikethroughSpan(), StyleSpan(Typeface.ITALIC))
+                match.groupValues[8].isNotEmpty() -> match.groupValues[8] to listOf(StyleSpan(Typeface.BOLD), StyleSpan(Typeface.ITALIC))
+                match.groupValues[10].isNotEmpty() -> match.groupValues[10] to listOf(StyleSpan(Typeface.BOLD))
+                match.groupValues[12].isNotEmpty() -> match.groupValues[12] to listOf(StyleSpan(Typeface.ITALIC))
+                match.groupValues[14].isNotEmpty() -> match.groupValues[14] to listOf(StrikethroughSpan())
+                else -> continue
+            }
+
+            spannable.replace(start, end, content)
+
+            spans.forEach { span ->
+                spannable.setSpan(
+                    span,
+                    start,
+                    start + content.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
         }
 
         return TextView(context).apply {
-            setText(spannable, TextView.BufferType.SPANNABLE)
+            this.text = spannable
             setTextColor(getColorFromAttr(R.attr.colorPrimary))
-            textSize = 16f
-            setPadding(1, 4, 1, 4)
         }
     }
 
