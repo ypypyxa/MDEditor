@@ -66,6 +66,7 @@ class LoaderFragment : Fragment() {
                 showPermissionDeniedDialog()
             }
         }
+        binding.urlEditText.requestFocus()
     }
 
     private fun setupListeners() {
