@@ -10,4 +10,6 @@
     <color name="light_gray">#878787</color>
     <color name="dark_glass">#587E7E7E</color>
     <color name="vk_blue">#0077ff</color>
+    <color name="transparent">#00000000</color>
+    <color name="dark_gray">#3C3C3C</color>
 </resources>

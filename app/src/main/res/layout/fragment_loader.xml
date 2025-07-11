@@ -7,7 +7,7 @@
     tools:context=".loader.ui.LoaderFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/urlInputLayout"
+        android:id="@+id/url_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -20,10 +20,10 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/urlEditText"
+            android:id="@+id/url_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textUri"/>
+            android:inputType="textUri" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -38,7 +38,7 @@
         android:backgroundTint="@color/vk_blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_load_file"
-        app:layout_constraintTop_toBottomOf="@id/urlInputLayout"/>
+        app:layout_constraintTop_toBottomOf="@id/url_input_layout" />
 
     <Button
         android:id="@+id/button_load_file"
@@ -52,8 +52,7 @@
         android:backgroundTint="@color/vk_blue"
         app:layout_constraintStart_toEndOf="@id/button_open_file"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/urlInputLayout"
-        />
+        app:layout_constraintTop_toBottomOf="@id/url_input_layout" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -64,6 +63,6 @@
         app:layout_constraintTop_toBottomOf="@id/button_open_file"
         app:layout_constraintBottom_toBottomOf="parent"
         android:indeterminateTint="?attr/colorPrimary"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,6 +70,13 @@ class EditorFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+        binding.buttonBack.setOnClickListener {
+            if (isEdited) {
+                showDialog()
+            } else {
+                findNavController().popBackStack()
+            }
+        }
         binding.buttonSave.setOnClickListener {
             val markdown = binding.markdownEditor.text.toString()
             editorViewModel?.saveMarkdown(markdown)

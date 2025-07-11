@@ -24,4 +24,5 @@
     <string name="unsaved_changes_will_be_lost">Несохраненные изменения будут удалены</string>
     <string name="yes">Да</string>
     <string name="default_url">https://raw.githubusercontent.com/ypypyxa/MDEditor/refs/heads/master/README.md</string>
+    <string name="back">Назад</string>
 </resources>

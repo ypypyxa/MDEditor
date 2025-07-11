@@ -51,8 +51,8 @@ class ViewerFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.buttonLoad.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_viewer_to_navigation_loader)
+        binding.buttonBack.setOnClickListener {
+            findNavController().popBackStack()
         }
         binding.buttonEdit.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_viewer_to_navigation_editor)
